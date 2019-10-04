@@ -1,0 +1,150 @@
+@mixin for-phone-only
+  @media (max-width: 599px)
+    @content
+@mixin for-tablet-portrait-up
+  @media (min-width: 600px)
+    @content
+@mixin for-tablet-landscape-up
+  @media (min-width: 900px)
+    @content
+@mixin for-desktop-up
+  @media (min-width: 1200px)
+    @content
+@mixin for-big-desktop-up
+  @media (min-width: 1800px)
+    @content
+
+
+.in-active
+  background-color: #981d1d
+  color: #fde5e5
+
+#root
+  display: flex
+  //justify-content: center
+  align-items: center
+  flex-direction: column
+  width: 100vw
+  height: 100vh
+  nav.navbar
+    width: 100%
+.omg-area
+  display: flex
+  justify-content: center
+  align-items: center
+  margin: 100px
+  input
+    position: absolute
+    width: 75px
+    text-align: center
+  .omg-container
+    height: 200px
+    width: 300px
+    background-color: #f5d8c3
+    border: red dashed thin
+    padding: 5px
+    .container-padding
+      background-color: #dec0c4
+      border: blue dashed thin
+      height: 100%
+      width: 100%
+    .box
+      position: absolute
+      background-color: #a97f49
+      width: 50px
+      height: 50px
+      border-radius: 4px
+      display: flex
+      justify-content: center
+      align-items: center
+      font-size: 15px
+      text-shadow: #ffffff 0px 0px 4px
+      &:hover
+        border: white solid 2px
+        z-index: 999
+        cursor: grab
+        background-color: #bd3530
+      &:active
+        border: white solid 2px
+        z-index: 999
+        cursor: grabbing
+        background-color: #bd3530
+      &.box-a
+        width: 60px
+        height: 200px
+      &.box-b
+        width: 200px
+        height: 60px
+    .wall
+      position: absolute
+      width: 30px
+      background-color: #672d35
+      &.wall-left
+        left: 0
+        top: 0
+        width: 9px
+        height: 100%
+      &.wall-top
+        left: 0
+        top: 0
+        height: 9px
+        width: 100%
+      &.wall-right
+        right: 0
+        top: 0
+        width: 9px
+      &.wall-bottom-right
+        height: 9px
+        width: 100%
+      &.wall-bottom-left
+        height: 9px
+        width: 100%
+.alert-area
+  background-color: rgba(0, 0, 0, 0.6784313725490196)
+  display: flex
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  justify-content: center
+  align-items: center
+  z-index: 99
+  .progress-bar
+    width: 100%
+    height: 2px
+    transition: all 0.7s
+  .alert-box
+    padding: 15px 20px
+.omg-parts
+  display: flex
+  flex-wrap: wrap
+  @include for-phone-only
+    margin-top: 300px
+  .omg-part
+    width: 50%
+    padding: 15px
+    margin: 0px
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-direction: column
+    &.omg-part-2
+      width: 50%
+      padding: 15px
+      justify-content: center
+      flex-direction: column
+      align-items: unset
+      overflow-y: auto
+      display: inline-block
+      height: 100vh
+      margin: 25px 0px
+    @include for-phone-only
+      width: 100%
+      &.omg-part-2
+        align-items: unset
+        width: 100%
+
+@include for-phone-only
+  .omg-parts
+    margin-top: 28px !important
