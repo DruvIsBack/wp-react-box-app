@@ -62,7 +62,6 @@ export const setNewHistory = (route)=>{
     };
 };
 export const setHistory = (index, history)=>{
-    console.log({index, history});
     return {
         type : SET_HISTORY,
         payload: {

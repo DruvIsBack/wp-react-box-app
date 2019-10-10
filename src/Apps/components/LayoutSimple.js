@@ -2,7 +2,7 @@ import React, {Fragment, Component} from 'react'
 import Loader from 'react-loader-spinner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faBackward } from '@fortawesome/free-solid-svg-icons';
-import {discardNotification} from '../actions/Notification';
+import {discardNotification,countdownNotification} from '../actions/Notification';
 import {setHistory} from '../actions/ActionApp';
 import {fetchBoxData} from '../actions/ActionAPIS';
 import {connect} from "react-redux";
@@ -57,9 +57,9 @@ class Layout extends Component{
     }
 
     getNotification = (notification, dispatch)=>{
-        /*setTimeout(()=>{
+        setTimeout(()=>{
             dispatch(countdownNotification(--notification.countdown));
-        },1000);*/
+        },1000);
         return (
             <div className="alert-area">
                 <div className="alert-box">
@@ -103,8 +103,6 @@ class Layout extends Component{
                 redirectTo: newHistory[newIndex]
             });
             this.props.dispatch(setHistory(newIndex, newHistory));
-        }else{
-            console.log({currentHistoryIndex, history});
         }
     };
 

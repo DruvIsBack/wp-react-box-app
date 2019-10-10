@@ -95,7 +95,6 @@ class QuoteSelection extends Component{
         }else{
             this.props.dispatch(removeSpecialCase());
             let result = setQuote(wall_a, wall_b, wall_c1, wall_c2);
-            console.log({result});
             if(result) {
                 this.props.dispatch(result);
                 this.props.dispatch(isQuotActive());

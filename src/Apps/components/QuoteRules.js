@@ -22,38 +22,6 @@ export const generateRack = (item)=>{
     return {depth, length, enable};
 };
 
-/*export const availableRacks = [
-    generateRack(30,90),
-    generateRack(30,105),
-    generateRack(30,120),
-    generateRack(30,135),
-    generateRack(30,150),
-
-    generateRack(45,75),
-    generateRack(45,90),
-    generateRack(45,105),
-    generateRack(45,120),
-    generateRack(45,135),
-    generateRack(45,150),
-    generateRack(45,165),
-    generateRack(45,180),
-
-    generateRack(60,45),
-    generateRack(60,60),
-    generateRack(60,75),
-    generateRack(60,90),
-    generateRack(60,105),
-    generateRack(60,120),
-    generateRack(60,135),
-    generateRack(60,150),
-    generateRack(60,165),
-    generateRack(60,180),
-];*/
-/*
-
-export let availableRacks = [];
-console.log({availableRacks});*/
-
 export const getRackByIndex = (availableRacks, index) => {
     let data = availableRacks[index];
     if(data){
@@ -74,8 +42,6 @@ export const getClosestMinimumSizeRack = ( racks, width, height, equals_or_less 
         }
         return false;
     });
-
-    console.log({racks, availableRacks});
 
     let l = height;
     let d = width;
@@ -135,13 +101,10 @@ export const isRackSize_applicableInContainer = ( racks, available_width, availa
     });
 
     let box = getClosestMinimumSizeRack(availableRacks, available_width, available_height, true);
-
-    console.log({area_width: available_width, area_height: available_height,lastClosableBox: box});
 };
 
 export const checkAllWalls = (availableRacks, a, b, c1, c2, ignoreInvalid = true, containerMargin = 5) => {
 
-    console.log({a, b, c1, c2});
 
     let prevC1 = c1;
     let prevC2 = c2;
@@ -210,7 +173,6 @@ export const checkAllWalls = (availableRacks, a, b, c1, c2, ignoreInvalid = true
 
         //Logics...
         if (!c1 && c1 !== 0 && !c2 && c2 !== 0) {
-            console.log("When C1 & C2 Both Not Seted...");
             //When C1 & C2 Both Not Seted...
             if (a <= 90) {
                 actions.push(setSpecialCase('Wall-A <= 90.', false));
@@ -238,82 +200,64 @@ export const checkAllWalls = (availableRacks, a, b, c1, c2, ignoreInvalid = true
         } else {
             if ((!c1 && c1 !== 0) && c2) {
                 //If C1 Not Available...
-                console.log("If C1 Not Available...");
                 if (c2 > a - 90) {
-                    console.log("If C2 > a - 90...");
                     let val = a - 90;
                     actions.push(sendNotification('C2 should be less than or equals ' + val + 'cm (Wall-A - 90cm) min, reset C1 to 0.'));
                     c2 = val;
                     c1 = 0;
                 } else if (c2 < 0) {
-                    console.log("If C2 < 0...");
                     let val = a - 90;
                     actions.push(sendNotification('C2 should be greater than or equals 0cm min, reset C1 to ' + val + '.'));
                     c2 = 0;
                     c1 = val;
                 } else {
-                    console.log("If C2 perfect...");
                     c1 = a - 90 - c2;
                 }
             } else if ((!c2 && c2 !== 0) && c1) {
                 //If C2 Not Available...
-                console.log("If C2 Not Available...");
                 if (c1 > a - 90) {
-                    console.log("If C1 > a - 90...");
                     let val = a - 90;
                     actions.push(sendNotification('C1 should be less than or equals ' + val + 'cm (Wall-A - 90cm) min, reset C2 to 0.'));
                     c1 = val;
                     c2 = 0;
                 } else if (c1 < 0) {
-                    console.log("If C1 < 0...");
                     let val = a - 90;
                     actions.push(sendNotification('C1 should be greater than or equals 0cm min, reset C1 to ' + val + '.'));
                     c1 = 0;
                     c2 = val;
                 } else {
-                    console.log("If C1 perfect...");
                     c2 = a - 90 - c1;
                 }
             } else {
                 //If Both C1 & C2 available...
-                console.log("If Both C1 & C2 available...");
                 c1 = parseInt(c1);
                 c2 = parseInt(c2);
 
                 let available_space = a - 90;
 
                 if(c1 > available_space){
-                    console.log("If C1 > available...");
                     actions.push(sendNotification('C1 should be less or equals (Wall-A - 90cm - Wall-C2) min, reset C1 to '+available_space+' & C2 to 0.'));
                     c1 = available_space;
                     c2 = 0;
                 }else if(c2 > available_space){
-                    console.log("If C2 > available...");
                     actions.push(sendNotification('C1 should be less or equals (Wall-A - 90cm - Wall-C1) min, reset C2 to '+available_space+' & C1 to 0.'));
                     c2 = available_space;
                     c1 = 0;
                 }else if(c1 < 0){
-                    console.log("If C1 < 0...");
                     actions.push(sendNotification('C1 should be greater or equals 0cm min, reset C1 to 0.'));
                     c1 = 0;
                 }else if(c2 < 0){
-                    console.log("If C2 < 0...");
                     actions.push(sendNotification('C2 should be greater or equals 0cm min, reset C2 to 0.'));
                     c2 = 0;
                 }else{
-                    console.log("If Both C1 & C2 available...");
                     if (c1 > available_space - c2){
-                        console.log("If C1 > available - c2...");
                         let val = available_space - c2;
                         actions.push(sendNotification('C1 should be less than or equals ' + val + 'cm (Wall-A - 90cm - C2) min, reset C1 to '+val+'.'));
                         c1 = val;
                     }else if (c2 > available_space - c1){
-                        console.log("If C2 > available - c1...");
                         let val = available_space - c1;
                         actions.push(sendNotification('C2 should be less than or equals ' + val + 'cm (Wall-A - 90cm - C1) min, reset C2 to '+val+'.'));
                         c2 = val;
-                    }else{
-                        console.log("Everything is perfect...");
                     }
                 }
             }
@@ -324,16 +268,21 @@ export const checkAllWalls = (availableRacks, a, b, c1, c2, ignoreInvalid = true
     }
 
     data = {a, b, c1:prevC1,c2:prevC2, ...data};
-    console.log(data);
     return response(success, actions, data);
 };
 
 
 export const getScreenshotOfElement = (element, posX, posY, width, height, callback) => {
+    let doc = document.documentElement;
+    let doc_left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+    let doc_top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+
+    let y = posY;
+    let x = posX;
     return html2canvas(element, {
         onrendered: function (canvas) {
             let context = canvas.getContext('2d');
-            let imageData = context.getImageData(posX, posY, width, height).data;
+            let imageData = context.getImageData(x, y, width, height).data;
             let outputCanvas = document.createElement('canvas');
             let outputContext = outputCanvas.getContext('2d');
             outputCanvas.width = width;
@@ -349,7 +298,7 @@ export const getScreenshotOfElement = (element, posX, posY, width, height, callb
         useCORS: false,
         taintTest: true,
         allowTaint: true,
-        scrollY: -125
+        scrollY: -doc_top
     });
 };
 

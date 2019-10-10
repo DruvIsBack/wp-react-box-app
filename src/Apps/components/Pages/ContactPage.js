@@ -27,7 +27,6 @@ class ContactPage extends Component{
         if(this.props.app.history[this.props.app.currentHistoryIndex] !== "/contact") {
             this.props.dispatch(setNewHistory('/contact'));
         }
-        console.log('componentDidMount() data => ',this.props.data);
     }
 
     componentDidUpdate(){
@@ -65,17 +64,11 @@ class ContactPage extends Component{
             if(haveSpecialCase){
                 final_data['special'] = this.props.app.reason_special_cases;
             }
-
-            console.log('submitContactData => ',submitContactData(final_data));
             this.props.dispatch(submitContactData(final_data));
-            //this.props.dispatch(sendNotification("Submitted thank you, we will contact you soon!.", 1));
-            //this.setState({redirect_to: '/'});
         }
-        //this.props.dispatch(sendNotification("This is an example when submit contact data."));
     };
     onClickBack = (e) => {
         let lastRedirectLocation = '/';
-        console.log('contactPage props => ',this.props);
         if(
             this.hasOwnProperty('props')
             && this.props.hasOwnProperty('location')
@@ -106,19 +99,15 @@ class ContactPage extends Component{
             <Fragment>
                 {(this.state.redirect_to !== false)?<Redirect to={this.state.redirect_to}/>:false}
                 <div className='container p-4'>
-                    {/*<div className='row' style={{ 'marginBottom' : '20px', display: "flex",
-                        justifyContent: "center" }}>
-                        <button onClick={this.onClickBack.bind(this)} type="button" className="btn btn-outline-info">{'<< Back to Main'}</button>
-                    </div>*/}
                     {
                         (!!this.props.data)?
-                            <div className="jumbotron mb-20">
-                                <h3 className="display-4">Submit Quote</h3>
+                            <div className="jumbotron p-2 mb-5">
+                                <h3 className="display-6">Submit Quote</h3>
                                 <p className="lead">Submit your quotes to admin.</p>
                             </div>
                             :
-                            <div className="jumbotron mb-20">
-                                <h3 className="display-4">Contact</h3>
+                            <div className="jumbotron p-2 mb-5">
+                                <h3 className="display-6">Contact</h3>
                                 <p className="lead">Submit your enquiry data to admin.</p>
                             </div>
                     }
@@ -135,16 +124,16 @@ class ContactPage extends Component{
                             <form onSubmit={this.onSubmitForm.bind(this)}>
                             <div className="form-group">
                                 <label htmlFor="exampleInputPassword1">Full Name</label>
-                                <input onChange={e=>{let val = e.target.value; val = val.trim(); if(!val.length){val = false;} console.log({full_name: val}); this.setState({full_name: val})}} className="form-control" name="full_name"/>
+                                <input onChange={e=>{let val = e.target.value; val = val.trim(); if(!val.length){val = false;} this.setState({full_name: val})}} className="form-control" name="full_name"/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="exampleInputEmail1">Email address</label>
-                                <input onChange={e=>{let val = e.target.value; val = val.trim(); if(!val.length){val = false;} console.log({email: val}); this.setState({email: val})}} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                                <input onChange={e=>{let val = e.target.value; val = val.trim(); if(!val.length){val = false;} this.setState({email: val})}} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
                                 <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="exampleInputPassword1">Subject / Requirements</label>
-                                <textarea onChange={e=>{let val = e.target.value; val = val.trim(); if(!val.length){val = false;} console.log({subject: val}); this.setState({subject: val})}} className="form-control" name="subject"/>
+                                <textarea onChange={e=>{let val = e.target.value; val = val.trim(); if(!val.length){val = false;} this.setState({subject: val})}} className="form-control" name="subject"/>
                             </div>
                             <button type="submit" className="btn btn-primary">Send</button>
                         </form>

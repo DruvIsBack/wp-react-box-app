@@ -426,7 +426,6 @@ class SelfService extends Component{
         };
 
         componentDidUpdate(){
-            this.consoleApp("componentDidUpdate() => ");
             this.quickSetup();
         }
         componentDidMount() {
@@ -434,7 +433,6 @@ class SelfService extends Component{
             if(this.props.app.history[this.props.app.currentHistoryIndex] !== "/self-service") {
                 this.props.dispatch(setNewHistory('/self-service'));
             }
-            this.consoleApp("componentDidMount() => ");
             window.addEventListener("resize", ()=>this.refreshScreenLengths(true));
             document.querySelector('.omg-part.omg-part-1').addEventListener('scroll', this.onScreenScroll);
             this.setState({
@@ -449,7 +447,6 @@ class SelfService extends Component{
             });
         }
         componentWillReceiveProps(nextProps, nextContext) {
-            this.consoleApp("componentWillReceiveProps()");
         }
         componentWillUnmount() {
             document.removeEventListener('mousemove', this.onMouseMove);
@@ -990,16 +987,13 @@ class SelfService extends Component{
 
         onSubmitEntry = (e)=>{
             e.preventDefault(true);
-            let containerOffset = getOffset(this.dom_omgContainer);
-            getScreenshotOfElement(this.dom_omgContainer,0, 0, containerOffset.width, containerOffset.height, (log)=>{
-                console.log(log);
+            let containerOffset = getOffset(this.dom_omgArea);
+            getScreenshotOfElement(this.dom_omgArea,200, 200, containerOffset.width, containerOffset.height, (log)=>{
+                
             }).then(canvas => {
                 let doc = document.querySelector('.container-fluid.omg-part.omg-part-2');
                 doc.appendChild(canvas);
-                //let image_url = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
-                console.log("getScreenshotOfElement() => ",{canvas});
                 let screenshot = dataURLtoFile(canvas.toDataURL(), 'screenshot');
-                console.log(setScreenshotFile(canvas.toDataURL()));
                 this.props.dispatch(setScreenshotFile(canvas.toDataURL()));
 
                 let dom_box1_dom = this.dom_omgContainer.querySelector('.box.box-a');
@@ -1407,6 +1401,40 @@ class SelfService extends Component{
             this.changeBoxSize('b', selectedBox);
         };
 
+        canFitBoxAInWidth = ({width}, availableWidth) => {
+            if(availableWidth - width > 0){
+                return true;
+            }else{
+                this.props.dispatch(sendNotification('Can\'t fit width '+width+'cm in available space '+availableWidth+'cm',-1));
+                return false;
+            }
+        }
+        canFitBoxAInHeight = ({height}, availableHeight) => {
+            if(availableHeight - height > 0){
+                return true;
+            }else{
+                this.props.dispatch(sendNotification('Can\'t fit height '+height+'cm in available space '+availableHeight+'cm',-1));
+                return false;
+            }
+        }
+
+        canFitBoxBInWidth = ({width}, availableWidth) => {
+            if(availableWidth - width > 0){
+                return true;
+            }else{
+                this.props.dispatch(sendNotification('Can\'t fit width '+width+'cm in available space '+availableWidth+'cm',-1));
+                return false;
+            }
+        }
+        canFitBoxBInHeight = ({height}, availableHeight) => {
+            if(availableHeight - height > 0){
+                return true;
+            }else{
+                this.props.dispatch(sendNotification('Can\'t fit height '+height+'cm in available space '+availableHeight+'cm',-1));
+                return false;
+            }
+        }
+
         changeBoxSize = (box_label,selectedBox)=>{
             let stateBoxes = {...this.state.boxes};
             let refine_box_data = {height: selectedBox.length, width: selectedBox.depth};
@@ -1417,12 +1445,39 @@ class SelfService extends Component{
                 do_PerseptualCalculation: true,
                 do_SmartPlaceBoxes: true,
             };
+
+            let containerActualOffset = {
+                width: this.state.wall_a - (this.state.containerPadding * 2),
+                height: this.state.wall_b - (this.state.containerPadding * 2)
+            };
+
+            let availableWidth = 0;
+            let availableHeight = 0;
+
             switch(box_label){
                 case "a":
-                    stateBoxes.a = refine_box_data;
+                    availableHeight = containerActualOffset.width;
+                    if(this.dom_box2_dom){
+                        availableHeight = containerActualOffset.width - this.state.boxes.b.width;
+                    }
+                    availableWidth = containerActualOffset.height;
+                    if(
+                        this.canFitBoxAInWidth(refine_box_data, availableWidth) &&
+                        this.canFitBoxAInHeight(refine_box_data, availableHeight)
+                    ){
+                        stateBoxes.a = refine_box_data;
+                    }
                     break;
                 case "b":
-                    stateBoxes.b = refine_box_data;
+                    availableWidth = containerActualOffset.width;
+                    availableHeight = containerActualOffset.height;
+                    availableWidth = availableWidth - this.state.boxes.a.height;
+                    if(
+                        this.canFitBoxBInWidth(refine_box_data, availableWidth) &&
+                        this.canFitBoxBInHeight(refine_box_data, availableHeight)
+                    ){
+                        stateBoxes.b = refine_box_data;
+                    }
                     break;
             }
             final_data.boxes = stateBoxes;
@@ -1434,7 +1489,6 @@ class SelfService extends Component{
         onClick_increaseBoxA_width = ()=>{
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.a;
-            this.consoleTest('Box-A increase width...');
 
             let nextAvailableBox = false;
             available_boxes.map(box=>{
@@ -1455,7 +1509,6 @@ class SelfService extends Component{
         onClick_increaseBoxA_height = ()=>{
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.a;
-            this.consoleTest('Box-A increase height...');
             let nextAvailableBox = false;
             available_boxes.map(box=>{
                 if(box.enable && box.length > current_box.height && !nextAvailableBox){
@@ -1473,7 +1526,6 @@ class SelfService extends Component{
         };
 
         onClick_decreaseBoxA_width = ()=>{
-            this.consoleTest('Box-A decrease width...');
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.a;
 
@@ -1493,7 +1545,6 @@ class SelfService extends Component{
         };
 
         onClick_decreaseBoxA_height = ()=>{
-            this.consoleTest('Box-A decrease height...');
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.a;
 
@@ -1517,7 +1568,6 @@ class SelfService extends Component{
         onClick_increaseBoxB_width = ()=>{
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.b;
-            this.consoleTest('Box-B increase width...');
 
             let nextAvailableBox = false;
             available_boxes.map(box=>{
@@ -1537,7 +1587,6 @@ class SelfService extends Component{
         onClick_increaseBoxB_height = ()=>{
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.b;
-            this.consoleTest('Box-B increase height...');
             let nextAvailableBox = false;
             available_boxes.map(box=>{
                 if(box.enable && box.length > current_box.height && !nextAvailableBox){
@@ -1554,7 +1603,6 @@ class SelfService extends Component{
         };
 
         onClick_decreaseBoxB_width = ()=>{
-            this.consoleTest('Box-B decrease width...');
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.b;
 
@@ -1574,7 +1622,6 @@ class SelfService extends Component{
         };
 
         onClick_decreaseBoxB_height = ()=>{
-            this.consoleTest('Box-B decrease height...');
             let available_boxes = this.props.boxes;
             let current_box = this.state.boxes.b;
 
@@ -1754,8 +1801,6 @@ class SelfService extends Component{
         };
 
         getTabs = () => {
-            this.consoleApp('State', this.state);
-            this.consoleApp('Props', this.props);
             const tabs = [
                 { name: 'Instructions.', content: this.getInstructionInfo() },
                 { name: 'Controls.', content: this.getBoxControls() },

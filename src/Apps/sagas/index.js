@@ -13,9 +13,6 @@ export function* FETCH_BOX_LIST_ASYNC(){
         data.map((item)=>{
             finalData.push(generateRack(item));
         });
-        console.log({finalData});
-
-        console.log({response_data: finalData});
         yield put(setBoxData(finalData));
     }
 }
@@ -23,7 +20,6 @@ export function* SUBMIT_CONTACT_ASYNC({payload}){
 
     let result = yield call(post__ContactData, payload);
     let response = yield result;
-    console.log({response});
     if(response) {
         yield put(sendNotification('Submitted! thank you, we will contact you soon!', 1));
     }else{
